@@ -27,22 +27,25 @@ class Acciones:
             login = usuario.identificar()
             if login:
                 print(f"Bienvenido {login['nombre']}, te has registrado en el sistema el dia {login['fecha']}")
-                if self.proximasAcciones(login):
-                    return
+                return login
+            else:
+                print("El correo o contraseña son incorrectos.")
+                return None
         except Exception as e:
-            print(f"El correo o contraseña son incorrectos. Error: {e}")
-            
+            print(f"Error: {e}")
+            return None
+
     def proximasAcciones(self, usuario):
+        make = notas.acciones.Acciones()
         while True:
             print("""
             Opciones disponibles:
-            Opcion 1: Crear nota.
-            Opcion 2: Mostrar notas.
-            Opcion 3: Eliminar nota.
-            Opcion 4: Salir.  
+                - Crear nota
+                - Mostrar notas
+                - Eliminar nota
+                - Cerrar sesión
             """)
-            accion = input("Ingresa la accion que deseas realizar: ").lower()
-            make = notas.acciones.Acciones()
+            accion = input("Ingresa la acción que deseas realizar: ").lower()
             
             if accion == "crear":
                 make.crear(usuario)
@@ -50,8 +53,8 @@ class Acciones:
                 make.mostrar(usuario)
             elif accion == "eliminar":
                 make.borrar(usuario)
-            elif accion == "salir":
-                print(f"Nos vemos pronto, {usuario['nombre']}")
-                return True
+            elif accion == "cerrar sesion":
+                print(f"Cerrando sesión de {usuario['nombre']}...")
+                break 
             else:
                 print("Acción no reconocida, por favor intenta de nuevo.")
