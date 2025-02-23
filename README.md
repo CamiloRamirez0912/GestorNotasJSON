@@ -50,7 +50,7 @@ El proyecto está organizado de la siguiente manera:
   - `repositorio.py`: Maneja la lectura y escritura de usuarios en `usuarios.json`.
   - `acciones.py`: Actúa como presentador, coordinando las acciones de usuarios entre el modelo y la vista.
 - **vista/**: Contiene la lógica de interacción con el usuario.
-  - `vista.py`: Define la interfaz de línea de comandos (inputs y outputs).
+  - `vista.py`: Define la interfaz gráfica del programa (inputs y outputs).
 - **main.py**: Punto de entrada de la aplicación, inicializa los componentes y ejecuta el programa.
 
 ## Requisitos
