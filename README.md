@@ -24,21 +24,34 @@ El proyecto está organizado de la siguiente manera:
             notas.json
         notas/
             init.py
-            acciones.py
-            nota.py
+            modelo.py      
+            repositorio.py 
+            acciones.py    
         usuarios/
             init.py
-            acciones.py
-            usuario.py    
+            modelo.py       
+            repositorio.py  
+            acciones.py 
+        usuarios/
+            init.py 
+            vista.py       
         main.py
         README.md
 
 
 
-- **notas/**: Contiene la lógica relacionada con la gestión de notas.
-- **usuarios/**: Contiene la lógica relacionada con la gestión de usuarios.
-- **data/**: Contiene los archivos JSON que almacenan los datos de los usuarios y las notas.
-- **main.py**: Punto de entrada de la aplicación.
+- **data/**: Contiene los archivos JSON que almacenan los datos de los usuarios (`usuarios.json`) y las notas (`notas.json`).
+- **notas/**: Módulo para la gestión de notas.
+  - `modelo.py`: Contiene la clase `Nota` con su lógica pura.
+  - `repositorio.py`: Maneja la lectura y escritura de notas en `notas.json`.
+  - `acciones.py`: Actúa como presentador, coordinando las acciones de notas entre el modelo y la vista.
+- **usuarios/**: Módulo para la gestión de usuarios.
+  - `modelo.py`: Contiene la clase `Usuario` con su lógica pura, incluyendo cifrado de contraseñas.
+  - `repositorio.py`: Maneja la lectura y escritura de usuarios en `usuarios.json`.
+  - `acciones.py`: Actúa como presentador, coordinando las acciones de usuarios entre el modelo y la vista.
+- **vista/**: Contiene la lógica de interacción con el usuario.
+  - `vista.py`: Define la interfaz de línea de comandos (inputs y outputs).
+- **main.py**: Punto de entrada de la aplicación, inicializa los componentes y ejecuta el programa.
 
 ## Requisitos
 

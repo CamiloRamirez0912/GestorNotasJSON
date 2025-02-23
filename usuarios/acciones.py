@@ -1,60 +1,41 @@
-import usuarios.usuario as modelo
-import notas.acciones
+from usuarios.modelo import Usuario
+from usuarios.repositorio import UsuariosRepository
+from notas.acciones import AccionesNotas
 
-class Acciones:
-    def registro(self):
-        print("Ingresando al sistema de registro")
-        nombre = input("Ingresa tu nombre: ")
-        apellido = input("Ingresa tu apellido: ")
-        email = input("Ingresa tu email: ")
-        password = input("Ingresa tu contraseña: ")
-        
-        usuario = modelo.Usuario(nombre, apellido, email, password)
-        registro = usuario.registrar()
-        
-        if registro[0] >= 1:
-            print(f"Te has registrado con el email {registro[1]['email']}")
+class AccionesUsuarios:
+    def __init__(self, repositorio=UsuariosRepository()):
+        self.repositorio = repositorio
+        self.acciones_notas = AccionesNotas()
+
+    def registro(self, vista):
+        nombre, apellido, email, password = vista.pedir_datos_registro()
+        usuario = Usuario(self.repositorio.generar_id(), nombre, apellido, email, password)  # Sin es_cifrada, se cifra aquí
+        if self.repositorio.guardar(usuario):
+            vista.mostrar_mensaje(f"Te has registrado con el email {email}")
         else:
-            print("No te registraste correctamente")
-        
-    def login(self):
-        print("Ingresando al sistema de login")
-        try:
-            email = input("Ingresa tu email: ")
-            password = input("Ingresa tu contraseña: ")
+            vista.mostrar_mensaje("No te registraste correctamente")
 
-            usuario = modelo.Usuario("", "", email, password)
-            login = usuario.identificar()
-            if login:
-                print(f"Bienvenido {login['nombre']}, te has registrado en el sistema el dia {login['fecha']}")
-                return login
-            else:
-                print("El correo o contraseña son incorrectos.")
-                return None
-        except Exception as e:
-            print(f"Error: {e}")
+    def login(self, vista):
+        email, password = vista.pedir_datos_login()
+        usuario = self.repositorio.identificar(email, password)
+        if usuario:
+            vista.mostrar_mensaje(f"Bienvenido {usuario.nombre}, te has registrado el día {usuario.fecha}")
+            return usuario
+        else:
+            vista.mostrar_mensaje("El correo o contraseña son incorrectos.")
             return None
 
-    def proximasAcciones(self, usuario):
-        make = notas.acciones.Acciones()
+    def proximas_acciones(self, usuario, vista):
         while True:
-            print("""
-            Opciones disponibles:
-                - Crear nota
-                - Mostrar notas
-                - Eliminar nota
-                - Cerrar sesión
-            """)
-            accion = input("Ingresa la acción que deseas realizar: ").lower()
-            
+            accion = vista.mostrar_menu_notas()
             if accion == "crear":
-                make.crear(usuario)
+                self.acciones_notas.crear(usuario, vista)
             elif accion == "mostrar":
-                make.mostrar(usuario)
+                self.acciones_notas.mostrar(usuario, vista)
             elif accion == "eliminar":
-                make.borrar(usuario)
+                self.acciones_notas.borrar(usuario, vista)
             elif accion == "cerrar sesion":
-                print(f"Cerrando sesión de {usuario['nombre']}...")
-                break 
+                vista.mostrar_mensaje(f"Cerrando sesión de {usuario.nombre}...")
+                break
             else:
-                print("Acción no reconocida, por favor intenta de nuevo.")
+                vista.mostrar_mensaje("Acción no reconocida, por favor intenta de nuevo.")

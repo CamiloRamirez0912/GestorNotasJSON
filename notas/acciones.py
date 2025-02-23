@@ -1,32 +1,25 @@
-import notas.nota as modelo
+from notas.modelo import Nota
+from notas.repositorio import NotasRepository
 
-class Acciones:
-    def crear(self, usuario):
-        print(f"{usuario['nombre']}, vamos a crear una nueva nota")
-        titulo = input("Ingresa el titulo de tu nota: ")
-        descripcion = input("Ingresa el contenido de tu nota: ")
-        nota = modelo.Nota(usuario['id'], titulo, descripcion)
-        guardar = nota.guardar()
-        if guardar[0] >= 1:
-            print(f"Se ha guardado correctamente la nota con titulo: {nota.titulo}")
+class AccionesNotas:
+    def __init__(self, repositorio=NotasRepository()):
+        self.repositorio = repositorio
+
+    def crear(self, usuario, vista):
+        titulo, descripcion = vista.pedir_datos_nota(usuario.nombre)
+        nota = Nota(usuario.id, titulo, descripcion)
+        if self.repositorio.guardar(nota):
+            vista.mostrar_mensaje(f"Se ha guardado correctamente la nota con título: {titulo}")
         else:
-            print("No se pudo guardar la nota.")
-            
-    def mostrar(self, usuario):
-        print(f"{usuario['nombre']}, tus notas son: ")
-        nota = modelo.Nota(usuario['id'])
-        notas = nota.listar()
-        for nota in notas:
-            print ("-------------------------------")
-            print("Titulo: ", nota["titulo"])
-            print("Contenido: ", nota["descripcion"])
-            print ("-------------------------------\n")
-            
-    def borrar(self, usuario):
-        titulo = input(f"{usuario['nombre']}, ingresa el titulo de la nota que quieres borrar: ")
-        nota = modelo.Nota(usuario['id'])
-        eliminar = nota.eliminar(titulo)
-        if eliminar[0] >= 1:
-            print(f"Se ha eliminado la nota con titulo: {titulo}")
+            vista.mostrar_mensaje("No se pudo guardar la nota.")
+
+    def mostrar(self, usuario, vista):
+        notas = self.repositorio.listar(usuario.id)
+        vista.mostrar_notas(usuario.nombre, notas)
+
+    def borrar(self, usuario, vista):
+        titulo = vista.pedir_titulo_eliminar(usuario.nombre)
+        if self.repositorio.eliminar(usuario.id, titulo):
+            vista.mostrar_mensaje(f"Se ha eliminado la nota con título: {titulo}")
         else:
-            print("No se pudo borrar la nota.")
+            vista.mostrar_mensaje("No se pudo borrar la nota.")

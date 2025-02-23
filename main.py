@@ -1,28 +1,23 @@
-from usuarios import acciones
+from usuarios.acciones import AccionesUsuarios
+from vista.vista import Vista
 
 def main():
+    vista = Vista()
+    acciones = AccionesUsuarios()
+    
     while True:
-        print("""
-        Acciones disponibles:
-            - Registro
-            - Login
-            - Salir
-        """)
-
-        accion = input("¿Qué quieres hacer?: ").lower()
-        make = acciones.Acciones()
-
+        accion = vista.mostrar_menu_principal()
         if accion == "registro":
-            make.registro()
+            acciones.registro(vista)
         elif accion == "login":
-            usuario = make.login()
+            usuario = acciones.login(vista)
             if usuario:
-                make.proximasAcciones(usuario)
+                acciones.proximas_acciones(usuario, vista)
         elif accion == "salir":
-            print("Saliendo del programa...")
+            vista.mostrar_mensaje("Saliendo del programa...")
             break
         else:
-            print("Acción no reconocida, por favor intenta de nuevo.")
+            vista.mostrar_mensaje("Acción no reconocida, por favor intenta de nuevo.")
 
 if __name__ == "__main__":
     main()
