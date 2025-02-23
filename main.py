@@ -1,23 +1,15 @@
+import tkinter as tk
 from usuarios.acciones import AccionesUsuarios
-from vista.vista import Vista
+from notas.acciones import AccionesNotas
+from vista.vista import VistaGUI
 
 def main():
-    vista = Vista()
-    acciones = AccionesUsuarios()
-    
-    while True:
-        accion = vista.mostrar_menu_principal()
-        if accion == "registro":
-            acciones.registro(vista)
-        elif accion == "login":
-            usuario = acciones.login(vista)
-            if usuario:
-                acciones.proximas_acciones(usuario, vista)
-        elif accion == "salir":
-            vista.mostrar_mensaje("Saliendo del programa...")
-            break
-        else:
-            vista.mostrar_mensaje("Acción no reconocida, por favor intenta de nuevo.")
+    root = tk.Tk()
+    vista = VistaGUI(root)
+    presentador_usuarios = AccionesUsuarios()
+    presentador_notas = AccionesNotas()
+    vista.set_presentadores(presentador_usuarios, presentador_notas)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
